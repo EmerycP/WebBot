@@ -39,12 +39,20 @@ public class PrimeauBot
 
     private static void checkProfondeur(String profondeur)
     {
-        Integer test = Integer.parseInt(profondeur);
-        if (test < 0 || test > 999)
+        try{
+            Integer test = Integer.parseInt(profondeur);
+            if (test < 0 || test > 999)
+            {
+                System.out.println("Veuillez entrer un nombre entre 0 et 999");
+                System.exit(0);
+            }
+        }
+        catch (Exception e)
         {
-            System.out.println("Veuillez entrer un nombre entre 0 et 999");
+            System.out.println("Impossible de convertir le nombre entré.");
             System.exit(0);
         }
+
 
     }
 
@@ -70,7 +78,7 @@ public class PrimeauBot
     {
 
         File chemin = new File(path);
-        File ecritureFichier = new File(chemin+"/log.txt");
+        File ecritureFichier = new File(chemin+"/test.txt");
 
 
         if (!chemin.isDirectory())
@@ -95,6 +103,12 @@ public class PrimeauBot
             System.out.println("Impossible d'écrire sur le dossier spécifié");
         }
 
+
+        if(!ecritureFichier.canWrite())
+        {
+            System.out.println("Impossible d'écrire sur le dossier spécifié");
+
+        }
 
     }
 }
