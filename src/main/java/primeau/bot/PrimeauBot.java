@@ -7,9 +7,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.WritePendingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PrimeauBot
 {
+    public static List<String> emailValid = new ArrayList<String>();
+
     public static void main( String[] args )
     {
         //Exemple: 3 http://jorisdeguet.github.io/420406-Applications/testbot/ /Users/emerycp/Desktop
@@ -22,12 +30,14 @@ public class PrimeauBot
         checkProfondeur(args[0]);
 
         //Check URL
-        checkURL(args[1]);
+        //checkURL(args[1]);
 
         //Check Directory
         checkDirectory(args[2]);
 
+        //Save pages
         savePage(args[1], args[2]);
+
     }
 
     private static void checkNumberArguments(int nombre)
@@ -61,24 +71,25 @@ public class PrimeauBot
 
     }
 
-    private static void checkURL(String unURL)
-    {
-        try{
-            URL toFind = new URL(unURL);
-            HttpURLConnection urlC = (HttpURLConnection) toFind.openConnection();
-            urlC.getResponseCode();
-        }
-        catch (MalformedURLException e){
-            System.out.println("Le URL est invalide");
-            System.exit(0);
-        }
-        catch (IOException e)
-        {
-            System.out.println("La connection n'a pas aboutie");
-            System.exit(0);
-        }
+//    private static void checkURL(String unURL)
+//    {
+//        try{
+//            URL toFind = new URL(unURL);
+//            HttpURLConnection urlC = (HttpURLConnection) toFind.openConnection();
+//            urlC.getResponseCode();
+//        }
+//        catch (MalformedURLException e){
+//            System.out.println("Le URL est invalide");
+//            System.exit(0);
+//        }
+//        catch (IOException e)
+//        {
+//            System.out.println("La connection n'a pas aboutie");
+//            System.exit(0);
+//        }
+//
+//    }
 
-    }
     private static void checkDirectory(String path)
     {
 
@@ -112,6 +123,7 @@ public class PrimeauBot
 
     private static void savePage(String pURL, String path){
         try{
+
             URL urlT = new URL(pURL);
             URLConnection urlC = urlT.openConnection();
             BufferedReader readURL = new BufferedReader(new InputStreamReader(
@@ -130,11 +142,21 @@ public class PrimeauBot
 
             //Ecrit la ligne
             while ((Line = readURL.readLine()) != null)
+            {
                 folder.write(Line + '\n');
+                if(Line.contains("@") && extraire(Line) != null){
+                    emailValid.add(extraire(Line));
+                    java.util.Collections.sort(emailValid);
+                }
+            }
+
 
             folder.close();
             readURL.close();
             System.out.println("La page suivante a été explorée et sauvegardée - " + pURL);
+            System.out.println("Voici la liste des mails collectés en ordre");
+            System.out.println(emailValid);
+
 
         }catch (MalformedURLException e)
         {
@@ -146,9 +168,16 @@ public class PrimeauBot
         }
 
     }
+    public static String extraire(String s){
+        Scanner scanner = new Scanner(s);
+        String input = scanner.nextLine();
 
-    private static void checkEmail()
-    {
+        Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+)\\.([a-z]+)");
+        Matcher matcher = pattern.matcher(input);
 
+        while(matcher.find()){
+            return matcher.group();
+        }
+        return null;
     }
 }
