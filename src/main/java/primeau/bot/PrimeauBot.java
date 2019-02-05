@@ -5,12 +5,15 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.WritePendingException;
 
 public class PrimeauBot
 {
     public static void main( String[] args )
     {
+        //Exemple: 3 http://jorisdeguet.github.io/420406-Applications/testbot/ /Users/emerycp/Desktop
+
 
         //Check si les arguments sont respectés
         checkNumberArguments(args.length);
@@ -23,6 +26,8 @@ public class PrimeauBot
 
         //Check Directory
         checkDirectory(args[2]);
+
+        savePage(args[1], args[2]);
     }
 
     private static void checkNumberArguments(int nombre)
@@ -103,12 +108,47 @@ public class PrimeauBot
             System.out.println("Impossible d'écrire sur le dossier spécifié");
         }
 
+    }
 
-        if(!ecritureFichier.canWrite())
+    private static void savePage(String pURL, String path){
+        try{
+            URL urlT = new URL(pURL);
+            URLConnection urlC = urlT.openConnection();
+            BufferedReader readURL = new BufferedReader(new InputStreamReader(
+                    urlC.getInputStream()));
+
+            String Line;
+            String fileName = "index.html";
+
+            //Get le path et cree le dossier
+            String[] urlName = urlT.getPath().split(File.separator);
+
+            if (urlName[urlName.length - 1].contains(".html"))
+                fileName = urlName[urlName.length - 1];
+
+            FileWriter folder = new FileWriter(path + "/" + fileName);
+
+            //Ecrit la ligne
+            while ((Line = readURL.readLine()) != null)
+                folder.write(Line + '\n');
+
+            folder.close();
+            readURL.close();
+            System.out.println("La page suivante a été explorée et sauvegardée - " + pURL);
+
+        }catch (MalformedURLException e)
         {
-            System.out.println("Impossible d'écrire sur le dossier spécifié");
-
+            System.out.println("L'url suivant est mal formé - " + pURL);
         }
+        catch (IOException e)
+        {
+            System.out.println("L'url suivant ne se connecte pas - " + pURL);
+        }
+
+    }
+
+    private static void checkEmail()
+    {
 
     }
 }
