@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4c4c00a4-e269-4e70-9d58-ed08828da28e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jsoup_jsoup_1_8_3.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PrimeauBot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PrimeauBot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/primeau/bot/PrimeauBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/primeau/bot/PrimeauBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/primeau/bot/PrimeauBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/primeau/bot/PrimeauBot.class" afterDir="false" />
-    </list>
+    <list default="true" id="4c4c00a4-e269-4e70-9d58-ed08828da28e" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,20 +15,11 @@
       <file leaf-file-name="PrimeauBot.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/primeau/bot/PrimeauBot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="80" column="5" lean-forward="true" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
+            <state relative-caret-position="402">
+              <caret line="217" column="59" selection-start-line="217" selection-start-column="59" selection-end-line="217" selection-end-column="59" />
               <folding>
                 <element signature="e#577#585#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Node.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.8.3/jsoup-1.8.3.jar!/org/jsoup/nodes/Node.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="47" selection-start-line="47" selection-end-line="47" />
             </state>
           </provider>
         </entry>
@@ -69,9 +53,9 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="262" />
-    <option name="y" value="55" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="125" />
+    <option name="y" value="114" />
     <option name="width" value="1680" />
     <option name="height" value="961" />
   </component>
@@ -175,12 +159,12 @@
       <workItem from="1549030641196" duration="772000" />
       <workItem from="1549397933968" duration="40000" />
       <workItem from="1549398220739" duration="9589000" />
-      <workItem from="1550002633421" duration="7203000" />
+      <workItem from="1550002633421" duration="8559000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17604000" />
+    <option name="totallyTimeSpent" value="18960000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -279,8 +263,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/primeau/bot/PrimeauBot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="80" column="5" lean-forward="true" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
+        <state relative-caret-position="402">
+          <caret line="217" column="59" selection-start-line="217" selection-start-column="59" selection-end-line="217" selection-end-column="59" />
           <folding>
             <element signature="e#577#585#0" expanded="true" />
           </folding>

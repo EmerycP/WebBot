@@ -215,7 +215,7 @@ public class PrimeauBot
                     s.add(absHref);
                 }
                 else{
-                    System.out.println("Ce lien n'est pas valide - " + absHref);
+                    System.out.println("Le URL est invalide - " + absHref);
                 }
             }
         }
