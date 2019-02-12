@@ -1,5 +1,10 @@
 package primeau.bot;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -7,18 +12,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.WritePendingException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PrimeauBot
 {
     public static List<String> emailValid = new ArrayList<String>();
+    public static List<String> liensVisité = new ArrayList<String>();
 
-    public static void main( String[] args )
+
+    public static void main( String[] args ) throws IOException
     {
         //Exemple: 3 http://jorisdeguet.github.io/420406-Applications/testbot/ /Users/emerycp/Desktop
 
@@ -29,14 +34,34 @@ public class PrimeauBot
         //Check Arguments
         checkProfondeur(args[0]);
 
-        //Check URL
-        //checkURL(args[1]);
+
 
         //Check Directory
         checkDirectory(args[2]);
 
-        //Save pages
-        savePage(args[1], args[2]);
+
+        //Parcours les pages && CheckURL
+        liensVisité.add(args[1]);
+        int indexL = 0;
+        int Longueur = 0;
+        for (int profondeur = 0; profondeur < Integer.parseInt(args[0]); profondeur++)
+        {
+            int Difference = liensVisité.size() - Longueur;
+            Longueur = liensVisité.size();
+            for(int i = 0; i < Difference; i++)
+            {
+                String url = liensVisité.get(indexL);
+                indexL++;
+                parcourirPage(url, args[2]);
+                liensVisité = checkA(liensVisité, indexL - 1);
+            }
+        }
+
+        //Print Email
+        System.out.println("Voici la liste des mails collectés en ordre:");
+        for(String s : emailValid)
+            System.out.println("->" + s);
+
 
     }
 
@@ -71,24 +96,24 @@ public class PrimeauBot
 
     }
 
-//    private static void checkURL(String unURL)
-//    {
-//        try{
-//            URL toFind = new URL(unURL);
-//            HttpURLConnection urlC = (HttpURLConnection) toFind.openConnection();
-//            urlC.getResponseCode();
-//        }
-//        catch (MalformedURLException e){
-//            System.out.println("Le URL est invalide");
-//            System.exit(0);
-//        }
-//        catch (IOException e)
-//        {
-//            System.out.println("La connection n'a pas aboutie");
-//            System.exit(0);
-//        }
-//
-//    }
+    private static boolean checkURL(String unURL)
+    {
+        try{
+            URL toFind = new URL(unURL);
+            HttpURLConnection urlC = (HttpURLConnection) toFind.openConnection();
+            urlC.getResponseCode();
+        }
+        catch (MalformedURLException e){
+            System.out.println("Le URL est invalide - " + unURL);
+            return false;
+        }
+        catch (IOException e)
+        {
+            System.out.println("La connection n'a pas aboutie - " + unURL);
+            return false;
+        }
+        return true;
+    }
 
     private static void checkDirectory(String path)
     {
@@ -121,7 +146,7 @@ public class PrimeauBot
 
     }
 
-    private static void savePage(String pURL, String path){
+    private static void parcourirPage(String pURL, String path){
         try{
 
             URL urlT = new URL(pURL);
@@ -133,30 +158,32 @@ public class PrimeauBot
             String fileName = "index.html";
 
             //Get le path et cree le dossier
-            String[] urlName = urlT.getPath().split(File.separator);
+            String[] urlName = urlT.getPath().split("/");
 
             if (urlName[urlName.length - 1].contains(".html"))
                 fileName = urlName[urlName.length - 1];
 
             FileWriter folder = new FileWriter(path + "/" + fileName);
+            Pattern pattern = Pattern.compile("([A-z0-9_.-]+)@([A-z0-9_.-]+)\\.([a-z]+)");
 
             //Ecrit la ligne
             while ((Line = readURL.readLine()) != null)
             {
-                folder.write(Line + '\n');
-                if(Line.contains("@") && extraire(Line) != null){
-                    emailValid.add(extraire(Line));
-                    java.util.Collections.sort(emailValid);
+
+                Matcher matcher = pattern.matcher(Line);
+
+                if(matcher.find()){
+                    if (!emailValid.contains(matcher.group()))
+                        emailValid.add(matcher.group());
+                    java.util.Collections.sort(emailValid, String.CASE_INSENSITIVE_ORDER);
                 }
+                folder.write(matcher.replaceAll("emeryc.primeau@gmail.com") + '\n');
             }
 
 
             folder.close();
             readURL.close();
-            System.out.println("La page suivante a été explorée et sauvegardée - " + pURL);
-            System.out.println("Voici la liste des mails collectés en ordre");
-            System.out.println(emailValid);
-
+            System.out.println("La page suivante a été explorée - " + pURL);
 
         }catch (MalformedURLException e)
         {
@@ -168,16 +195,30 @@ public class PrimeauBot
         }
 
     }
-    public static String extraire(String s){
-        Scanner scanner = new Scanner(s);
-        String input = scanner.nextLine();
 
-        Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+)\\.([a-z]+)");
-        Matcher matcher = pattern.matcher(input);
+    public static List<String> checkA (List<String> s, int i) throws IOException
+    {
+        Document doc = Jsoup.connect(s.get(i)).get();
 
-        while(matcher.find()){
-            return matcher.group();
+        Elements link = doc.select("a");
+        for (int index = 0; index < link.size(); index++)
+        {
+            String absHref = link.get(index).attr("abs:href");
+            if (absHref.isEmpty())
+            {
+                absHref = link.get(index).attr("href");
+            }
+            if (!s.contains(absHref))
+            {
+                if (checkURL(absHref))
+                {
+                    s.add(absHref);
+                }
+                else{
+                    System.out.println("Ce lien n'est pas valide - " + absHref);
+                }
+            }
         }
-        return null;
+        return s;
     }
 }
