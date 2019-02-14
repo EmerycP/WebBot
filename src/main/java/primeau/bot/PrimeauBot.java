@@ -148,25 +148,35 @@ public class PrimeauBot
 
     private static void parcourirPage(String pURL, String path){
         try{
-
+            //Etablie la connection
             URL urlT = new URL(pURL);
             URLConnection urlC = urlT.openConnection();
             BufferedReader readURL = new BufferedReader(new InputStreamReader(
                     urlC.getInputStream()));
 
             String Line;
+
+            //Cree le path des fichiers
+            String chemin= path + urlT.getPath();
+            File folderr = new File(chemin);
+            folderr.getParentFile().mkdirs();
+
+
+            //Regarde le nom du .html
             String fileName = "index.html";
-
-            //Get le path et cree le dossier
-            String[] urlName = urlT.getPath().split("/");
-
+            String[] urlName = chemin.split("/");
             if (urlName[urlName.length - 1].contains(".html"))
                 fileName = urlName[urlName.length - 1];
+            else if(urlName[urlName.length - 1].contains("testbot"))
+                fileName = "";
 
-            FileWriter folder = new FileWriter(path + "/" + fileName);
+            FileWriter folder = new FileWriter(folderr.getParentFile() +"/"  + fileName);
+
+            /////////////////////////////////////////////////////////////////////////////
+
+
             Pattern pattern = Pattern.compile("([A-z0-9_.-]+)@([A-z0-9_.-]+)\\.([a-z]+)");
-
-            //Ecrit la ligne
+            //Ecrit la ligne en remplacant par mon mail.
             while ((Line = readURL.readLine()) != null)
             {
 
@@ -179,8 +189,6 @@ public class PrimeauBot
                 }
                 folder.write(matcher.replaceAll("emeryc.primeau@gmail.com") + '\n');
             }
-
-
             folder.close();
             readURL.close();
             System.out.println("La page suivante a été explorée - " + pURL);
@@ -198,25 +206,23 @@ public class PrimeauBot
 
     public static List<String> checkA (List<String> s, int i) throws IOException
     {
-        Document doc = Jsoup.connect(s.get(i)).get();
 
+        //Regarde chacun des href dans les a.
+        Document doc = Jsoup.connect(s.get(i)).get();
         Elements link = doc.select("a");
         for (int index = 0; index < link.size(); index++)
         {
             String absHref = link.get(index).attr("abs:href");
+
             if (absHref.isEmpty())
-            {
                 absHref = link.get(index).attr("href");
-            }
+
             if (!s.contains(absHref))
             {
                 if (checkURL(absHref))
-                {
                     s.add(absHref);
-                }
-                else{
+                else
                     System.out.println("Le URL est invalide - " + absHref);
-                }
             }
         }
         return s;
