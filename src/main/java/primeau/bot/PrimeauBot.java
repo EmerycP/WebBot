@@ -167,7 +167,7 @@ public class PrimeauBot
             String[] urlName = chemin.split("/");
             if (urlName[urlName.length - 1].contains(".html"))
                 fileName = urlName[urlName.length - 1];
-            else if(urlName[urlName.length - 1].contains("testbot"))
+            else if(urlName[urlName.length - 1].contains(""))
                 fileName = "";
 
             FileWriter folder = new FileWriter(folderr.getParentFile() +"/"  + fileName);
